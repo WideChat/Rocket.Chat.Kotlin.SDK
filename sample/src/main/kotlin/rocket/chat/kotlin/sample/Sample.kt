@@ -59,6 +59,7 @@ fun main(args: Array<String>) {
     val client = RocketChatClient.create {
         httpClient = okHttpClient
         restUrl = "https://unstable.rocket.chat"
+        userAgent = "Rocket.Chat.Kotlin.SDK"
         tokenRepository = SimpleTokenRepository()
         platformLogger = logger
     }
@@ -66,7 +67,7 @@ fun main(args: Array<String>) {
     // using coroutines
     val job = launch(CommonPool) {
 
-        val token = client.login("", "")
+        val token = client.login("luciofm-testing", "vpnfe5lnv!")
         logger.debug("Token: userId = ${token.userId} - authToken = ${token.authToken}")
 
         launch {

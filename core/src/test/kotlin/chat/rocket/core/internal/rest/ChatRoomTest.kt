@@ -38,6 +38,7 @@ class ChatRoomTest {
         sut = RocketChatClient.create {
             httpClient = client
             restUrl = mockServer.url("/")
+            userAgent = "Rocket.Chat.Kotlin.SDK"
             tokenRepository = this@ChatRoomTest.tokenProvider
             platformLogger = PlatformLogger.NoOpLogger()
         }
@@ -319,7 +320,7 @@ class ChatRoomTest {
     }
 
     @Test
-    fun `open() should succeed without throwing`() {
+    fun `hide() (as false) should succeed without throwing`() {
         mockServer.expect()
             .post()
             .withPath("/api/v1/channels.open")
@@ -336,7 +337,7 @@ class ChatRoomTest {
     }
 
     @Test
-    fun `close() should succeed without throwing`() {
+    fun `hide() (as true) should succeed without throwing`() {
         mockServer.expect()
             .post()
             .withPath("/api/v1/channels.close")
@@ -349,6 +350,61 @@ class ChatRoomTest {
                 hideRoom = true
             )
             assertTrue(result)
+        }
+    }
+
+    @Test
+    fun `favorite() (as false) should succeed without throwing`() {
+        mockServer.expect()
+            .post()
+            .withPath("/api/v1/rooms.favorite")
+            .andReturn(200, SUCCESS)
+            .once()
+
+        runBlocking {
+            val result = sut.favorite(roomId = "GENERAL", favorite = false)
+            assertTrue(result)
+        }
+    }
+
+    @Test
+    fun `favorite() (as true) should succeed without throwing`() {
+        mockServer.expect()
+            .post()
+            .withPath("/api/v1/rooms.favorite")
+            .andReturn(200, SUCCESS)
+            .once()
+
+        runBlocking {
+            val result = sut.favorite(roomId = "GENERAL", favorite = true)
+            assertTrue(result)
+        }
+    }
+
+    @Test
+    fun `searchMessages() should succeed without throwing`() {
+        mockServer.expect()
+            .get()
+            .withPath("/api/v1/chat.search?roomId=GENERAL&searchText=test")
+            .andReturn(200, MESSAGES_OK)
+            .once()
+
+        runBlocking {
+            val messages = sut.searchMessages(roomId = "GENERAL", searchText = "test")
+            System.out.println("Messages: $messages")
+        }
+    }
+
+    @Test(expected = RocketChatException::class)
+    fun `searchMessages() should fail with RocketChatAuthException if not logged in`() {
+        mockServer.expect()
+            .get()
+            .withPath("/api/v1/chat.search?roomId=GENERAL&searchText=test")
+            .andReturn(401, MUST_BE_LOGGED_ERROR)
+            .once()
+
+        runBlocking {
+            sut.searchMessages(roomId = "GENERAL", searchText = "test")
         }
     }
 }
