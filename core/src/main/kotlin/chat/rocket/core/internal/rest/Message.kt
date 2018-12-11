@@ -4,13 +4,16 @@ import chat.rocket.common.model.BaseResult
 import chat.rocket.common.model.RoomType
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.RestResult
+import chat.rocket.core.internal.model.CreateDirectMessagePayload
 import chat.rocket.core.internal.model.DeletePayload
+import chat.rocket.core.internal.model.MessageReportPayload
 import chat.rocket.core.internal.model.PostMessagePayload
 import chat.rocket.core.internal.model.ReactionPayload
 import chat.rocket.core.internal.model.SendMessageBody
 import chat.rocket.core.internal.model.SendMessagePayload
 import chat.rocket.core.model.DeleteResult
 import chat.rocket.core.model.Message
+import chat.rocket.core.model.NewDirectMessageResult
 import chat.rocket.core.model.PagedResult
 import chat.rocket.core.model.ReadReceipt
 import chat.rocket.core.model.attachment.Attachment
@@ -373,3 +376,47 @@ suspend fun RocketChatClient.getMessageReadReceipts(
 
     return@withContext PagedResult<List<ReadReceipt>>(result.result(), result.total() ?: -1, result.offset() ?: -1)
 }
+
+/**
+ * Reports a message identified by {messageId} along with its {description}.
+ *
+ * @param messageId The id of the message.
+ * @param description The description of the message being reported.
+ */
+suspend fun RocketChatClient.reportMessage(
+    messageId: String,
+    description: String
+): Boolean = withContext(CommonPool) {
+    val payload = MessageReportPayload(messageId = messageId, description = description)
+    val adapter = moshi.adapter(MessageReportPayload::class.java)
+    val payloadBody = adapter.toJson(payload)
+
+    val body = RequestBody.create(MEDIA_TYPE_JSON, payloadBody)
+
+    val url = requestUrl(restUrl, "chat.reportMessage").build()
+    val request = requestBuilderForAuthenticatedMethods(url).post(body).build()
+
+    return@withContext handleRestCall<BaseResult>(request, BaseResult::class.java).success
+}
+
+/**
+ * Create a direct message session with another user.
+ *
+ * @param username The username of the user to create a session with.
+ * @return The updated Message object.
+ */
+suspend fun RocketChatClient.createDirectMessage(username: String): NewDirectMessageResult =
+    withContext(CommonPool) {
+        val payload = CreateDirectMessagePayload(username = username)
+        val adapter = moshi.adapter(CreateDirectMessagePayload::class.java)
+        val payloadBody = adapter.toJson(payload)
+
+        val body = RequestBody.create(MEDIA_TYPE_JSON, payloadBody)
+
+        val url = requestUrl(restUrl, "im.create").build()
+        val request = requestBuilderForAuthenticatedMethods(url).post(body).build()
+
+        val type = Types.newParameterizedType(RestResult::class.java, NewDirectMessageResult::class.java)
+
+        return@withContext handleRestCall<RestResult<NewDirectMessageResult>>(request, type).result()
+    }
