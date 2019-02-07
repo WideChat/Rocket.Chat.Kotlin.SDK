@@ -15,5 +15,5 @@ suspend fun RocketChatClient.getAccessToken(serviceName: String) : String = with
     val url = requestUrl(restUrl, "users.getServiceAccessToken").build()
     val request = requestBuilderForAuthenticatedMethods(url).post(body).build()
     val result = handleRestCall<AccessTokenResult>(request, AccessTokenResult::class.java)
-    result
+    result.accessToken
 }
