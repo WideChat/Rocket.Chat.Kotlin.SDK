@@ -9,8 +9,8 @@ import okhttp3.RequestBody
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.withContext
 
-suspend fun RocketChatClient.inviteViaEmail(email: String): Boolean = withContext(CommonPool) {
-    val payload = InviteEmailPayload(email)
+suspend fun RocketChatClient.inviteViaEmail(email: String, language: String): Boolean = withContext(CommonPool) {
+    val payload = InviteEmailPayload(email, language)
     val adapter = moshi.adapter(InviteEmailPayload::class.java)
 
     val payloadBody = adapter.toJson(payload)
@@ -23,8 +23,8 @@ suspend fun RocketChatClient.inviteViaEmail(email: String): Boolean = withContex
     result
 }
 
-suspend fun RocketChatClient.inviteViaSMS(phone: String): Boolean = withContext(CommonPool) {
-    val payload = InviteSMSPayload(phone)
+suspend fun RocketChatClient.inviteViaSMS(phone: String, language: String): Boolean = withContext(CommonPool) {
+    val payload = InviteSMSPayload(phone, language)
     val adapter = moshi.adapter(InviteSMSPayload::class.java)
 
     val payloadBody = adapter.toJson(payload)
