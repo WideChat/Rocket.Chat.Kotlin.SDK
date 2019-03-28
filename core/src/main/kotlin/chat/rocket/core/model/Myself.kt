@@ -16,5 +16,6 @@ data class Myself(
     val statusDefault: UserStatus?,
     val utcOffset: Float?,
     val emails: List<Email>?,
-    val roles: List<String>?
+    val roles: List<String>?,
+    val telephoneNumber: String?
 ) : BaseUser
