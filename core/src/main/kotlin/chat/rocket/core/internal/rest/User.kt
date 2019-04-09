@@ -4,16 +4,12 @@ import chat.rocket.common.RocketChatException
 import chat.rocket.common.model.BaseResult
 import chat.rocket.common.model.RoomType
 import chat.rocket.common.model.User
+import chat.rocket.common.model.UserPresence
 import chat.rocket.common.util.CalendarISO8601Converter
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.RestMultiResult
 import chat.rocket.core.internal.RestResult
-import chat.rocket.core.internal.model.Subscription
-import chat.rocket.core.internal.model.UserPayload
-import chat.rocket.core.internal.model.UserPayloadData
-import chat.rocket.core.internal.model.OwnBasicInformationPayload
-import chat.rocket.core.internal.model.OwnBasicInformationPayloadData
-import chat.rocket.core.internal.model.PasswordPayload
+import chat.rocket.core.internal.model.*
 import chat.rocket.core.model.ChatRoom
 import chat.rocket.core.model.Myself
 import chat.rocket.core.model.Removed
@@ -121,6 +117,16 @@ suspend fun RocketChatClient.deleteOwnAccount(password: String): Boolean {
     val request = requestBuilderForAuthenticatedMethods(httpUrl).post(body).build()
 
     return handleRestCall<BaseResult>(request, BaseResult::class.java).success
+}
+
+suspend fun RocketChatClient.usersGetPresence(userId: String):
+        UserPresence = withContext(CommonPool) {
+    val httpUrl = requestUrl(restUrl, "users.getPresence")
+        .addQueryParameter("userId", userId)
+        .build()
+    val request = requestBuilderForAuthenticatedMethods(httpUrl).get().build()
+
+    return@withContext handleRestCall<UserPresence>(request, UserPresence::class.java)
 }
 
 /**

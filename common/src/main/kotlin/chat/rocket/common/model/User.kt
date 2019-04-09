@@ -11,5 +11,6 @@ data class User(
     val status: UserStatus? = null,
     val utcOffset: Float? = null,
     val emails: List<Email>? = null,
-    val roles: List<String>? = null
+    val roles: List<String>? = null,
+    val telephoneNumber: String? = null
 ) : BaseUser
