@@ -120,7 +120,7 @@ suspend fun RocketChatClient.deleteOwnAccount(password: String): Boolean {
 }
 
 suspend fun RocketChatClient.usersGetPresence(userId: String):
-        UserPresence = withContext(CommonPool) {
+        UserPresence = withContext(Dispatchers.IO) {
     val httpUrl = requestUrl(restUrl, "users.getPresence")
         .addQueryParameter("userId", userId)
         .build()
