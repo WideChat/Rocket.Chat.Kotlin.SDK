@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.RequestBody
 
-suspend fun RocketChatClient.getAccessToken(serviceName: String) : String = withContext(Dispatchers.io) {
+suspend fun RocketChatClient.getAccessToken(serviceName: String) : String = withContext(Dispatchers.IO) {
     val payload = AccessTokenPayload(serviceName)
     val adapter = moshi.adapter(AccessTokenPayload::class.java)
     val payloadBody = adapter.toJson(payload)

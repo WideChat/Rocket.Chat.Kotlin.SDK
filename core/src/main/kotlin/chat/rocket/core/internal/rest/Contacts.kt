@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.RequestBody
 
-suspend fun RocketChatClient.queryContacts(weakHashes: List<String>): List<ContactHolder> = withContext(Dispatchers.io) {
+suspend fun RocketChatClient.queryContacts(weakHashes: List<String>): List<ContactHolder> = withContext(Dispatchers.IO) {
     val payload = QueryContactsPayload(weakHashes)
     val adapter = moshi.adapter(QueryContactsPayload::class.java)
     val payloadBody = adapter.toJson(payload)
