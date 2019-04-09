@@ -4,11 +4,11 @@ import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.model.QueryContactsPayload
 import chat.rocket.core.model.ContactHolder
 import chat.rocket.core.model.QueryContactResult
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.RequestBody
 
-suspend fun RocketChatClient.queryContacts(weakHashes: List<String>): List<ContactHolder> = withContext(CommonPool) {
+suspend fun RocketChatClient.queryContacts(weakHashes: List<String>): List<ContactHolder> = withContext(Dispatchers.io) {
     val payload = QueryContactsPayload(weakHashes)
     val adapter = moshi.adapter(QueryContactsPayload::class.java)
     val payloadBody = adapter.toJson(payload)
