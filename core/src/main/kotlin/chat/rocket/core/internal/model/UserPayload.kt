@@ -16,3 +16,8 @@ data class UserPayloadData(
     val username: String?,
     val email: String?
 )
+
+@JsonSerializable
+data class UserDiscoverabilityPayload(
+        val discoverability: String
+)

@@ -340,3 +340,19 @@ internal suspend fun RocketChatClient.listRooms(timestamp: Long? = null): RestMu
     )
     return handleRestCall(request, type)
 }
+
+suspend fun RocketChatClient.setDiscoverability(discoverability: String): Boolean {
+    val payload = UserDiscoverabilityPayload(discoverability)
+    val adapter = moshi.adapter(UserDiscoverabilityPayload::class.java)
+    val payloadBody = adapter.toJson(payload)
+    val body = RequestBody.create(MEDIA_TYPE_JSON, payloadBody)
+    val httpUrl = requestUrl(restUrl, "users.setDiscoverability").build()
+    val request = requestBuilderForAuthenticatedMethods(httpUrl).post(body).build()
+    return handleRestCall<BaseResult>(request, BaseResult::class.java).success
+}
+
+suspend fun RocketChatClient.getDiscoverability(): String {
+    val httpUrl = requestUrl(restUrl, "users.getDiscoverability").build()
+    val request = requestBuilderForAuthenticatedMethods(httpUrl).get().build()
+    return handleRestCall<UserDiscoverabilityPayload>(request, UserDiscoverabilityPayload::class.java).discoverability
+}
