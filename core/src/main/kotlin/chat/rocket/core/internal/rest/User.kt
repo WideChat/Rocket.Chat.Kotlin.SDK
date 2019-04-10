@@ -16,9 +16,9 @@ import chat.rocket.core.model.Removed
 import chat.rocket.core.model.UserRole
 import chat.rocket.core.model.Room
 import com.squareup.moshi.Types
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -120,7 +120,7 @@ suspend fun RocketChatClient.deleteOwnAccount(password: String): Boolean {
 }
 
 suspend fun RocketChatClient.usersGetPresence(userId: String):
-        UserPresence = withContext(CommonPool) {
+        UserPresence = withContext(Dispatchers.IO) {
     val httpUrl = requestUrl(restUrl, "users.getPresence")
         .addQueryParameter("userId", userId)
         .build()
@@ -221,7 +221,7 @@ suspend fun RocketChatClient.chatRooms(
  *
  * @return UserRole object specifying current user roles.
  */
-suspend fun RocketChatClient.roles(): UserRole = withContext(CommonPool) {
+suspend fun RocketChatClient.roles(): UserRole = withContext(Dispatchers.IO) {
     val httpUrl = requestUrl(restUrl, "user.roles").build()
     val request = requestBuilderForAuthenticatedMethods(httpUrl).get().build()
     return@withContext handleRestCall<UserRole>(request, UserRole::class.java)

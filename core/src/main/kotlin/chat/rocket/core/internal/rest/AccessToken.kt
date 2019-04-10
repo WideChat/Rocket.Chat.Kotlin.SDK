@@ -3,11 +3,11 @@ package chat.rocket.core.internal.rest
 import chat.rocket.core.RocketChatClient
 import chat.rocket.core.internal.model.AccessTokenPayload
 import chat.rocket.core.model.AccessTokenResult
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.withContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.RequestBody
 
-suspend fun RocketChatClient.getAccessToken(serviceName: String) : String = withContext(CommonPool) {
+suspend fun RocketChatClient.getAccessToken(serviceName: String) : String = withContext(Dispatchers.IO) {
     val payload = AccessTokenPayload(serviceName)
     val adapter = moshi.adapter(AccessTokenPayload::class.java)
     val payloadBody = adapter.toJson(payload)
