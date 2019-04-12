@@ -5,5 +5,6 @@ import se.ansman.kotshi.JsonSerializable
 @JsonSerializable
 data class InviteEmailPayload(
     val email: String,
-    val language: String
+    val language: String,
+    val realname: String?
 )
