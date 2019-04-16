@@ -9,8 +9,8 @@ import okhttp3.RequestBody
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-suspend fun RocketChatClient.inviteViaEmail(email: String, language: String): Boolean = withContext(Dispatchers.IO) {
-    val payload = InviteEmailPayload(email, language)
+suspend fun RocketChatClient.inviteViaEmail(email: String, language: String, realname: String? = null): Boolean = withContext(Dispatchers.IO) {
+    val payload = InviteEmailPayload(email, language, realname)
     val adapter = moshi.adapter(InviteEmailPayload::class.java)
 
     val payloadBody = adapter.toJson(payload)
@@ -23,8 +23,8 @@ suspend fun RocketChatClient.inviteViaEmail(email: String, language: String): Bo
     result
 }
 
-suspend fun RocketChatClient.inviteViaSMS(phone: String, language: String): Boolean = withContext(Dispatchers.IO) {
-    val payload = InviteSMSPayload(phone, language)
+suspend fun RocketChatClient.inviteViaSMS(phone: String, language: String, realname: String? = null): Boolean = withContext(Dispatchers.IO) {
+    val payload = InviteSMSPayload(phone, language, realname)
     val adapter = moshi.adapter(InviteSMSPayload::class.java)
 
     val payloadBody = adapter.toJson(payload)
