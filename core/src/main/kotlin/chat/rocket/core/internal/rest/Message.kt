@@ -249,11 +249,11 @@ suspend fun RocketChatClient.uploadFile(
         val body = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart(
-                "file", file.name,
+                "file", "", //file.name,
                 RequestBody.create(MediaType.parse(mimeType), file)
             )
             .addFormDataPart("msg", msg)
-            .addFormDataPart("description", description)
+            //.addFormDataPart("description", description)
             .build()
 
         uploadFile(roomId, body)
@@ -272,11 +272,11 @@ suspend fun RocketChatClient.uploadFile(
         val body = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart(
-                "file", fileName,
+                "file", "", //fileName,
                 InputStreamRequestBody(MediaType.parse(mimeType), inputStreamProvider)
             )
             .addFormDataPart("msg", msg)
-            .addFormDataPart("description", description)
+            //.addFormDataPart("description", description)
             .build()
 
         uploadFile(roomId, body)
