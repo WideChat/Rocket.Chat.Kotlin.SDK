@@ -243,7 +243,8 @@ suspend fun RocketChatClient.uploadFile(
     file: File,
     mimeType: String,
     msg: String = "",
-    description: String = ""
+    description: String = "",
+    id: String? = null
 ) {
     withContext(Dispatchers.IO) {
         val body = MultipartBody.Builder()
@@ -254,6 +255,7 @@ suspend fun RocketChatClient.uploadFile(
             )
             .addFormDataPart("msg", msg)
             .addFormDataPart("description", description)
+            .addFormDataPart("id", id)
             .build()
 
         uploadFile(roomId, body)
@@ -266,6 +268,7 @@ suspend fun RocketChatClient.uploadFile(
     mimeType: String,
     msg: String = "",
     description: String = "",
+    id: String? = null,
     inputStreamProvider: () -> InputStream?
 ) {
     withContext(Dispatchers.IO) {
@@ -277,6 +280,7 @@ suspend fun RocketChatClient.uploadFile(
             )
             .addFormDataPart("msg", msg)
             .addFormDataPart("description", description)
+            .addFormDataPart("id", id)
             .build()
 
         uploadFile(roomId, body)
