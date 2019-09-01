@@ -19,6 +19,10 @@ import chat.rocket.core.internal.RoomListAdapterFactory
 import chat.rocket.core.internal.CoreJsonAdapterFactory
 import chat.rocket.core.internal.ReactionsAdapter
 import chat.rocket.core.internal.model.Subscription
+import chat.rocket.core.internal.model.elementPayload.ButtonElementPayload
+import chat.rocket.core.internal.model.elementPayload.DatePickerElementPayload
+import chat.rocket.core.internal.model.elementPayload.ElementPayload
+import chat.rocket.core.internal.model.elementPayload.OverflowElementPayload
 import chat.rocket.core.internal.realtime.socket.Socket
 import chat.rocket.core.internal.realtime.socket.model.State
 import chat.rocket.core.internal.realtime.socket.model.StreamMessage
@@ -60,11 +64,15 @@ class RocketChatClient private constructor(
         .add(PolymorphicJsonAdapterFactory.of(Block::class.java, "type")
                 .withSubtype(SectionBlock::class.java, "section")
                 .withSubtype(ActionBlock::class.java, "actions"))
-         .add(PolymorphicJsonAdapterFactory.of(Element::class.java, "type")
-                 .withSubtype(ButtonElement::class.java, "button")
-                 .withSubtype(OverflowElement::class.java, "overflow")
-                 .withSubtype(DatePickerElement::class.java, "datepicker")
-                 .withSubtype(ImageElement::class.java, "image"))
+        .add(PolymorphicJsonAdapterFactory.of(Element::class.java, "type")
+                .withSubtype(ButtonElement::class.java, "button")
+                .withSubtype(OverflowElement::class.java, "overflow")
+                .withSubtype(DatePickerElement::class.java, "datepicker")
+                .withSubtype(ImageElement::class.java, "image"))
+        .add(PolymorphicJsonAdapterFactory.of(ElementPayload::class.java, "type")
+                .withSubtype(ButtonElementPayload::class.java, "button")
+                .withSubtype(OverflowElementPayload::class.java, "overflow")
+                .withSubtype(DatePickerElementPayload::class.java, "datepicker"))
         .add(RoomListAdapterFactory(logger))
         .add(MetaJsonAdapter.ADAPTER_FACTORY)
         .add(java.lang.Long::class.java, ISO8601Date::class.java, TimestampAdapter(CalendarISO8601Converter()))
