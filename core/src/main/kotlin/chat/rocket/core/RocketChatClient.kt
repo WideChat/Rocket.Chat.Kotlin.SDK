@@ -25,8 +25,13 @@ import chat.rocket.core.internal.realtime.socket.model.StreamMessage
 import chat.rocket.core.model.Message
 import chat.rocket.core.model.Myself
 import chat.rocket.core.model.Room
+import chat.rocket.core.model.block.ActionBlock
+import chat.rocket.core.model.block.Block
+import chat.rocket.core.model.block.SectionBlock
+import chat.rocket.core.model.block.elements.*
 import chat.rocket.core.model.url.MetaJsonAdapter
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -52,6 +57,14 @@ class RocketChatClient private constructor(
         .add(RestMultiResult.JsonAdapterFactory())
         .add(SettingsAdapter())
         .add(AttachmentAdapterFactory(logger))
+        .add(PolymorphicJsonAdapterFactory.of(Block::class.java, "type")
+                .withSubtype(SectionBlock::class.java, "section")
+                .withSubtype(ActionBlock::class.java, "actions"))
+         .add(PolymorphicJsonAdapterFactory.of(Element::class.java, "type")
+                 .withSubtype(ButtonElement::class.java, "button")
+                 .withSubtype(OverflowElement::class.java, "overflow")
+                 .withSubtype(DatePickerElement::class.java, "datepicker")
+                 .withSubtype(ImageElement::class.java, "image"))
         .add(RoomListAdapterFactory(logger))
         .add(MetaJsonAdapter.ADAPTER_FACTORY)
         .add(java.lang.Long::class.java, ISO8601Date::class.java, TimestampAdapter(CalendarISO8601Converter()))

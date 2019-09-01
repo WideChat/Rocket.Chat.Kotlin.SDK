@@ -6,6 +6,7 @@ import chat.rocket.common.model.BaseMessage
 import chat.rocket.common.model.SimpleRoom
 import chat.rocket.common.model.SimpleUser
 import chat.rocket.core.model.attachment.Attachment
+import chat.rocket.core.model.block.Block
 import chat.rocket.core.model.url.Url
 import com.squareup.moshi.Json
 import se.ansman.kotshi.JsonDefaultValueBoolean
@@ -45,6 +46,7 @@ data class Message(
     override val mentions: List<SimpleUser>? = null,
     override val channels: List<SimpleRoom>? = null,
     val attachments: List<Attachment>? = null,
+    val blocks: List<Block>? = null,
     @JsonDefaultValueBoolean(false)
     val pinned: Boolean = false,
     val starred: List<SimpleUser>? = null,
